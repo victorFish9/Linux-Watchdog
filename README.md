@@ -37,70 +37,70 @@ sudo chmod 666 /var/log/system_health.log
 
 How to Test the "Self-Healing"
 
-Step 1: Start the Service
+**Step 1**: Start the Service
 
-Start the dummy Python service manually:
-
-python3 dummy_service.py &
+  Start the dummy Python service manually:
+  
+  python3 dummy_service.py &
 
 
 Note the PID (Process ID).
 
-Step 2: Verify it's running
+**Step 2**: Verify it's running
 
-ps aux | grep dummy_service.py
-
-
-Step 3: Run the Watchdog (Manual Test)
-
-Run the script manually to see if it detects the running service:
-
-./watchdog.sh
-cat /var/log/system_health.log
+  ps aux | grep dummy_service.py
 
 
-It should effectively do nothing or log that disk usage is normal.
+**Step 3**: Run the Watchdog (Manual Test)
 
-Step 4: Simulate a Crash
-
-Kill the python process:
-
-pkill -f dummy_service.py
-
-
-Step 5: Run the Watchdog (Remediation Test)
-
-Run the script again:
-
-./watchdog.sh
+  Run the script manually to see if it detects the running service:
+  
+  ./watchdog.sh
+  cat /var/log/system_health.log
 
 
-Check the logs immediately:
+  It should effectively do nothing or log that disk usage is normal.
 
-cat /var/log/system_health.log
+**Step 4**: Simulate a Crash
 
-
-Expected Output:
-
-[Date] ALERT: dummy_service.py is NOT running.
-[Date] ATTEMPT: Restarting dummy_service.py...
-[Date] SUCCESS: dummy_service.py was successfully restarted.
-
-Verify the service is back alive:
-
-ps aux | grep dummy_service.py
+  Kill the python process:
+  
+  pkill -f dummy_service.py
 
 
-Automation (Cron Job)
+**Step 5**: Run the Watchdog (Remediation Test)
 
-To make this a true "Watchdog," set it to run every minute.
+  Run the script again:
+  
+  ./watchdog.sh
+  
+  
+  Check the logs immediately:
+  
+  cat /var/log/system_health.log
+  
+  
+  Expected Output:
+  
+  [Date] ALERT: dummy_service.py is NOT running.
+  [Date] ATTEMPT: Restarting dummy_service.py...
+  [Date] SUCCESS: dummy_service.py was successfully restarted.
+  
+  Verify the service is back alive:
+  
+  ps aux | grep dummy_service.py
 
-Open Crontab:
 
-crontab -e
+**Automation (Cron Job)**
 
-
-Add the following line to the bottom:
+  To make this a true "Watchdog," set it to run every minute.
+  
+  Open Crontab:
+  
+  crontab -e
+  
+  
+  Add the following line to the bottom:
 
 * * * * * /home/kali/project/watchdog.sh
 
